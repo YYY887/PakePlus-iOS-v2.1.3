@@ -1,37 +1,26 @@
-const removeSel = (selector) => {
-    const ele = document.querySelector(selector)
-    if (ele) {
-        console.log(`Removing element: ${selector}`)
-        ele.style.display = 'none'
+window.addEventListener("DOMContentLoaded",()=>{const t=document.createElement("script");t.src="https://www.googletagmanager.com/gtag/js?id=G-W5GKHM0893",t.async=!0,document.head.appendChild(t);const n=document.createElement("script");n.textContent="window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());gtag('config', 'G-W5GKHM0893');",document.body.appendChild(n)});// very important, if you don't know what it is, don't touch it
+// 非常重要，不懂代码不要动，这里可以解决80%的问题，也可以生产1000+的bug
+const hookClick = (e) => {
+    const origin = e.target.closest('a')
+    const isBaseTargetBlank = document.querySelector(
+        'head base[target="_blank"]'
+    )
+    console.log('origin', origin, isBaseTargetBlank)
+    if (
+        (origin && origin.href && origin.target === '_blank') ||
+        (origin && origin.href && isBaseTargetBlank)
+    ) {
+        e.preventDefault()
+        console.log('handle origin', origin)
+        location.href = origin.href
     } else {
-        console.log(`Element not found for selector: ${selector}`)
+        console.log('not handle origin', origin)
     }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    console.log('DOM fully loaded and parsed')
-    const observer = new MutationObserver(() => {
-        removeSel('.title-wrap')
-        removeSel('.rule-btn-wrap')
-        removeSel('.gd-desc')
-        removeSel('.myapp')
-        removeSel('body > uni-app > uni-page > uni-page-wrapper > uni-page-body > uni-view > uni-view.page-wrap-bd > uni-view:nth-child(4)')
-        removeSel('body > uni-app > uni-page > uni-page-wrapper > uni-page-body > uni-view > uni-view.home-page > uni-view.home-body > uni-view.cate-wrap > uni-view:nth-child(4)')
-        removeSel('body > uni-app > uni-page > uni-page-wrapper > uni-page-body > uni-view > uni-view.home-page > uni-view.home-body > uni-view.cate-wrap > uni-view:nth-child(5)')
-        removeSel('body > uni-app > uni-page > uni-page-wrapper > uni-page-body > uni-view > uni-view.home-page > uni-view.home-body > uni-view.cate-wrap > uni-view:nth-child(6)')
-        if(document.querySelector(".coupon")){
-            document.querySelector(".coupon").style.height = "100vh"
-        }
-        if(document.querySelector(".page-wrap")){
-            document.querySelector(".page-wrap").style.height = "100vh"
-        }
-    })
+window.open = function (url, target, features) {
+    console.log('open', url, target, features)
+    location.href = url
+}
 
-    observer.observe(document.body, {
-        childList: true,
-        subtree: true,
-    })
-    // Example: Remove elements with class 'ad-banner' and id 'popup'
-    removeSel('body > uni-app > uni-tabbar > div.uni-tabbar > div:nth-child(3)')
-    removeSel('body > uni-app > uni-tabbar > div.uni-tabbar > div:nth-child(4)')
-})
+document.addEventListener('click', hookClick, { capture: true })
